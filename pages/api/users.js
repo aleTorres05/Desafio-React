@@ -12,3 +12,22 @@ export async function getUsers(token) {
 
   return json.data.users;
 }
+
+export async function create(email, password, name, profilePic) {
+  const response = await fetch(`${API_URL}/users`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      password,
+      name,
+      profilePic,
+    }),
+  });
+
+  const json = response.json();
+
+  return json;
+}

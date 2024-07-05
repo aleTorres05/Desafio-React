@@ -1,41 +1,36 @@
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { create } from "./api/users";
 import Link from "next/link";
-import { login } from "./api/login";
-import { useRouter } from "next/router";
 import { Toaster, toast } from "sonner";
+import { useRouter } from "next/router";
 
-export default function Login() {
-  const [showPassword, setShowPassword] = useState(false);
+export default function RegisterUser() {
   const router = useRouter();
-
   const {
     handleSubmit,
     register,
-    formState: { errors },
+    formState: { erorr },
     setError,
   } = useForm();
 
   async function onSubmit(data) {
     try {
-      const response = await login(data.email, data.password);
-      if (response.token) {
-        window.localStorage.setItem("token", response.token);
-        window.localStorage.setItem("email", response.email);
-        router.push("/");
+      if (data.password === data.confiredPass) {
+        await create(data.email, data.password, data.name, data.profilePic)
+          .then(() => {
+            toast.message("User Created correctly");
+            router.push("/login");
+          })
+          .catch((error) => {
+            toast.error("Error Creating User");
+          });
       } else {
-        toast.error("Usuario o contraseña incorrecta");
-        setError("root.credentials", {
-          type: "manual",
-          message: "Credenciales invalidas",
-        });
+        toast.error("Passwords do not match");
       }
     } catch (error) {
-      toast.error("Error al iniciar session");
-      console.error("[login error]", error);
+      toast.error("Error creating user");
     }
   }
-
   return (
     <>
       <Toaster />
@@ -108,49 +103,72 @@ export default function Login() {
         </div>
         <div className="flex flex-col justify-items-center items-center w-[100%] md:w-[90%] lg:w-[70%] xl:w-[50%] 2xl:w-[40%]">
           <form
+            className="flex flex-col w-[70%]"
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col w-[90%]"
           >
-            <p className="mb-1 text-lg">Email</p>
+            <label>Name</label>
             <input
-              className="border rounded-md h-[40px] mb-2 p-2"
-              placeholder="Email"
+              className="border rounded-md p-1 mb-2 mt-1"
+              required
               type="text"
-              required
-              {...register("email", {
-                required: { value: true, message: "Email Required" },
+              placeholder="Name"
+              name=""
+              id=""
+              {...register("name", {
+                required: { value: true, message: "Name Requiered" },
               })}
             />
-            <p className="mb-1 text-lg">Password</p>
+            <label>Profile Picture</label>
             <input
-              className="border rounded-md h-[40px] mb-2 p-2"
-              placeholder="Password"
-              type="password"
+              className="border rounded-md p-1 mb-2 mt-1"
               required
-              {...register("password", {
-                required: { value: true, message: "Password Required" },
+              type="text"
+              placeholder="Profile Pic"
+              name=""
+              id=""
+              {...register("profilePic", {
+                required: { value: false },
               })}
             />
-            <div className="flex flex-row justify-between h-[45px] mt-2">
-              <input
-                className="justify-self-start h-[20px] w-[20px]"
-                type="checkbox"
-                name=""
-                id=""
-              />
-              <p className="flex-1 justify-self-center self-start ml-1">
-                Remember me
-              </p>
-              <Link className=" text-[#3B49DF]" href="/">
-                Forgot password?
-              </Link>
-            </div>
-            <button className="w-[100%]  bg-[#3B49DF] h-[50px] rounded-md text-white text-lg">
-              Log in
+            <label>Email</label>
+            <input
+              className="border rounded-md p-1 mb-2 mt-1"
+              required
+              type="text"
+              placeholder="Email"
+              name=""
+              id=""
+              {...register("email", {
+                required: { value: true, message: "Email Requiered" },
+              })}
+            />
+            <label>Password</label>
+            <input
+              className="border rounded-md p-1 mb-2 mt-1"
+              required
+              type="password"
+              placeholder="Password"
+              name=""
+              id=""
+              {...register("password", {
+                required: { value: true, message: "Password Requiered" },
+              })}
+            />
+            <label>Confirm Password</label>
+            <input
+              className="border rounded-md p-1 mb-2 mt-1"
+              required
+              type="password"
+              placeholder="Confirm Password"
+              name=""
+              id=""
+              {...register("confiredPass", {
+                required: { value: true, message: "Please Confirm Password" },
+              })}
+            />
+            <button className="border-2 p-1 rounded-md self-center w-[100%] md:w-[52%] xl:w-[30%]  h-[100%] md:p-1 border-[#3B49DF] text-[#3B49DF]  hover:bg-[#3B49DF] hover:text-white">
+              Create account
             </button>
-            {errors.root?.credentials && (
-              <p className="text-red-500 text-center">Invalid Credentials</p>
-            )}
           </form>
         </div>
       </main>

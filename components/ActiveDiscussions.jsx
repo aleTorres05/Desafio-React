@@ -31,9 +31,12 @@ export default function ActiveDiscussion() {
     <div>
       {discussions.map((discussion) => {
         return (
-          <div>
-            <h3>{discussion.title}</h3>
-            <p>{discussion.comments}</p>
+          <div
+            className="mb-8 border-b-2 p-1"
+            key={`discussion-${discussion.title}`}
+          >
+            <h3 className="text-md">{discussion.title}</h3>
+            <p className="text-sm opacity-50 mb-2">{discussion.comments}</p>
           </div>
         );
       })}

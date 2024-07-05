@@ -2,27 +2,34 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import { getUsers } from "@/pages/api/users";
 
 export default function NavBar() {
   const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const [token, setToken] = useState("");
+  const [email, setEmail] = useState("");
+  const [userProfilePic, setUserProfilePic] = useState("");
+
+  const getUsersData = async () => {
+    const users = await getUsers(token);
+    const userPic = users.filter((user) => {
+      return user.email === email;
+    });
+    setUserProfilePic(userPic);
+  };
+
   useEffect(() => {
     const tkn = localStorage.getItem("token");
+    const email = localStorage.getItem("email");
     setToken(tkn);
+    setEmail(email);
   }, [token]);
-
-  const handleClick = () => {
-    setIsOpen(!isOpen);
-  };
 
   return (
     <nav className="flex flex-row border-b-2 fixed h-[55px] w-[100%] p-2 col-start-1 col-end-7 bg-white">
       <div className="flex flex-row w-[100%] xl:mr-[100px] xl:ml-[100px]">
-        <button
-          className="flex flex-col justify-center mr-2 items-center md:hidden"
-          onClick={handleClick}
-        >
+        <button className="flex flex-col justify-center mr-2 items-center md:hidden">
           <img
             className="h-[25px] w-[25px]"
             src="https://img.icons8.com/?size=100&id=36389&format=png&color=000000"
@@ -30,11 +37,17 @@ export default function NavBar() {
           />
         </button>
         <div className="flex flex-row grow justify-start ml-0">
-          <img
-            className="h-[40px] w-[45px] md:h-[45px] md:w-[50px] md:mr-2"
-            src="https://media.dev.to/cdn-cgi/image/quality=100/https://dev-to-uploads.s3.amazonaws.com/uploads/logos/resized_logo_UQww2soKuUsjaOGNB38o.png"
-            alt="logo"
-          />
+          <button
+            onClick={() => {
+              router.push("/");
+            }}
+          >
+            <img
+              className="h-[40px] w-[45px] md:h-[45px] md:w-[50px] md:mr-2"
+              src="https://media.dev.to/cdn-cgi/image/quality=100/https://dev-to-uploads.s3.amazonaws.com/uploads/logos/resized_logo_UQww2soKuUsjaOGNB38o.png"
+              alt="logo"
+            />
+          </button>
           <input
             className="hidden md:block w-[85%] lg:w-[100%] h-[100%] border-2 rounded-md md:mt-1 p-3"
             type="text"
@@ -69,10 +82,7 @@ export default function NavBar() {
           )}
           {token && (
             <button className="h-[100%] w-[40px] md:w-[35px] md:h-[100%] border rounded-[50%] border-black ml-2 md:ml-0 xl:mr-3">
-              <img
-                src="https://api.dicebear.com/9.x/adventurer/svg?seed=Luna"
-                alt="avatar"
-              />
+              <img src={userProfilePic} alt="avatar" />
             </button>
           )}
 
