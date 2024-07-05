@@ -69,7 +69,7 @@ export default function NavBar() {
 
           {token && (
             <button className="hidden md:block border-2 rounded-md md:w-[50%] lg:w-[40%] xl:w-[30%] xl:mr-3 h-[100%] md:p-1 border-[#3B49DF] text-[#3B49DF]  hover:bg-[#3B49DF] hover:text-white">
-              <Link href="/CreatePost">Create Post</Link>
+              <Link href="/createPost">Create Post</Link>
             </button>
           )}
           {token && (
