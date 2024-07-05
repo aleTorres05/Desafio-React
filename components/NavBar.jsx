@@ -9,15 +9,6 @@ export default function NavBar() {
   const router = useRouter();
   const [token, setToken] = useState("");
   const [email, setEmail] = useState("");
-  const [userProfilePic, setUserProfilePic] = useState("");
-
-  const getUsersData = async () => {
-    const users = await getUsers(token);
-    const userPic = users.filter((user) => {
-      return user.email === email;
-    });
-    setUserProfilePic(userPic);
-  };
 
   useEffect(() => {
     const tkn = localStorage.getItem("token");
@@ -25,6 +16,13 @@ export default function NavBar() {
     setToken(tkn);
     setEmail(email);
   }, [token]);
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("email");
+    router.reload();
+    router.push("/");
+  }
 
   return (
     <nav className="flex flex-row border-b-2 fixed h-[55px] w-[100%] p-2 col-start-1 col-end-7 bg-white">
@@ -68,7 +66,7 @@ export default function NavBar() {
           />
 
           {token && (
-            <button className="hidden md:block border-2 rounded-md md:w-[50%] lg:w-[40%] xl:w-[30%] xl:mr-3 h-[100%] md:p-1 border-[#3B49DF] text-[#3B49DF]  hover:bg-[#3B49DF] hover:text-white">
+            <button className="hidden md:block border-2 rounded-md md:w-[50%] lg:w-[36%] xl:w-[30%] xl:mr-3 h-[100%] md:p-1 border-[#3B49DF] text-[#3B49DF]  hover:bg-[#3B49DF] hover:text-white">
               <Link href="/createPost">Create Post</Link>
             </button>
           )}
@@ -82,13 +80,26 @@ export default function NavBar() {
           )}
           {token && (
             <button className="h-[100%] w-[40px] md:w-[35px] md:h-[100%] border rounded-[50%] border-black ml-2 md:ml-0 xl:mr-3">
-              <img src={userProfilePic} alt="avatar" />
+              <img
+                src="https://api.dicebear.com/9.x/pixel-art/svg?seed=George"
+                alt="avatar"
+              />
             </button>
           )}
 
           {!token && (
-            <button className="border-2 p-1 rounded-md  w-[100%] md:w-[52%] xl:w-[30%]  h-[100%] md:p-1 border-[#3B49DF] text-[#3B49DF]  hover:bg-[#3B49DF] hover:text-white">
+            <button className="border-2 p-1 rounded-md  w-[100%] md:w-[52%] lg:w-[40%] xl:w-[30%]  h-[100%] md:p-1 border-[#3B49DF] text-[#3B49DF]  hover:bg-[#3B49DF] hover:text-white">
               <Link href="/registerUser">Create account</Link>
+            </button>
+          )}
+          {token && (
+            <button
+              onClick={() => {
+                handleLogout();
+              }}
+              className="border-2 p-1 rounded-md  w-[100%] md:w-[52%] lg:w-[30%] xl:w-[30%]  h-[100%] md:p-1 border-[#3B49DF] text-[#3B49DF]  hover:bg-[#3B49DF] hover:text-white"
+            >
+              Sign Out
             </button>
           )}
         </div>
