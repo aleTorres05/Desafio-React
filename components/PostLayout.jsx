@@ -54,7 +54,7 @@ export default function PostLayout({ posts }) {
         </header>
         {posts.map((post, idx) => {
           return (
-            <Link href={`/posts/${post._id}`}>
+            <Link href={`/posts/${post._id}`} key={`post-${idx}`}>
               <article
                 key={`post-${idx}`}
                 className="border rounded-md mb-3 bg-white"
