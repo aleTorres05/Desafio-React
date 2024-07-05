@@ -23,7 +23,7 @@ export default function PostDetail({ posts }) {
     getPostByID(id).then((postData) => {
       setPost(postData.data?.post);
     });
-  }, []);
+  }, [id]);
 
   return (
     <>
@@ -64,7 +64,7 @@ export default function PostDetail({ posts }) {
               <div className="flex flex-row mt-3.5 mb-10">
                 {post.tags?.map((tag) => {
                   return (
-                    <div className="mr-5">
+                    <div className="mr-5" key={`tag-${tag}`}>
                       <p>#{tag}</p>
                     </div>
                   );
