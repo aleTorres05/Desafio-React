@@ -88,7 +88,7 @@ export default function NavBar() {
 
           {!token && (
             <button className="border-2 p-1 rounded-md  w-[100%] md:w-[52%] xl:w-[30%]  h-[100%] md:p-1 border-[#3B49DF] text-[#3B49DF]  hover:bg-[#3B49DF] hover:text-white">
-              <Link href="/register">Create account</Link>
+              <Link href="/registerUser">Create account</Link>
             </button>
           )}
         </div>
